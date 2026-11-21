@@ -113,6 +113,33 @@ npm run dev
 
 ---
 
+## 🐳 Run with Docker & Docker Compose (1-Command Setup)
+
+You can launch both the FastAPI backend and React frontend production containers with a single command:
+
+```bash
+# Clone the repository
+git clone https://github.com/ramashishmaurya/datastraw.git
+cd datastraw
+
+# Run entire stack in Docker
+docker compose up --build
+```
+
+- **Frontend Application:** `http://localhost:3000` (Served via high-performance NGINX)
+- **FastAPI Backend & Swagger Docs:** `http://localhost:8000/docs`
+
+---
+
+## 🔄 CI/CD Pipeline (GitHub Actions)
+
+This repository includes a production-grade automated CI/CD pipeline defined in `.github/workflows/ci-cd.yml`:
+1. **Backend CI**: Automated syntax, import, and dependency verification on Python 3.11.
+2. **Frontend CI**: Automatic npm dependency installation, linting, and Vite production bundle compilation on Node 20.
+3. **Docker Build Validation**: Validates that both backend and frontend Docker containers build successfully on every PR and push to `main`.
+
+---
+
 ## 🧠 Section 8: Tell Us How You Think
 
 ### 1. How did you model employees, brands, processes, pods, and their relationships?
