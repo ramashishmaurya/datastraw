@@ -1,13 +1,22 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.master_data import router as master_data_router
 from routes.roster import router as roster_router
 from routes.simulation import router as simulation_router
+from database import init_db
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Initialize DB tables and seed if empty
+    init_db()
+    yield
 
 app = FastAPI(
     title="DataStraw Smart Roster Management System API",
     description="Intelligent Constraint-Based Roster Generation, Conflict Detection & Pod Capacity Management Engine",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # Enable CORS for frontend integration
