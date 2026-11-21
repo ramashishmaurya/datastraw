@@ -321,6 +321,7 @@ export default function App() {
         isOpen={isConflictDrawerOpen}
         onClose={() => setIsConflictDrawerOpen(false)}
         conflicts={rosterData.conflicts}
+        allEmployees={masterData.employees}
         onApplyFix={handleApplyFix}
         isResolving={isResolving}
       />
@@ -339,9 +340,11 @@ export default function App() {
           cell={cellToEdit.cell}
           employee={cellToEdit.employee}
           brands={masterData.brands}
+          allEmployees={masterData.employees}
           isOpen={Boolean(cellToEdit)}
           onClose={() => setCellToEdit(null)}
           onSave={handleSaveCellEdit}
+          onAssignReplacement={handleApplyFix}
         />
       )}
 

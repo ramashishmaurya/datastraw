@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { X, AlertTriangle, ShieldAlert, CheckCircle2, Zap, ArrowRight, Filter, ShieldCheck } from 'lucide-react';
+import { X, AlertTriangle, ShieldAlert, CheckCircle2, Zap, ArrowRight, Filter, ShieldCheck, UserPlus, ChevronDown } from 'lucide-react';
 
 export default function ConflictDrawer({ 
   isOpen, 
   onClose, 
   conflicts, 
+  allEmployees = [],
   onApplyFix,
   isResolving 
 }) {
   const [filterSeverity, setFilterSeverity] = useState('ALL');
+  const [customAssignOpen, setCustomAssignOpen] = useState({}); // { [confId]: true/false }
+  const [customSelectedEmp, setCustomSelectedEmp] = useState({}); // { [confId]: empId }
 
   if (!isOpen) return null;
 
@@ -20,6 +23,23 @@ export default function ConflictDrawer({
 
   const criticalCount = conflicts.filter(c => c.severity === 'CRITICAL').length;
   const warningCount = conflicts.filter(c => c.severity === 'WARNING').length;
+
+  const toggleCustomAssign = (confId) => {
+    setCustomAssignOpen(prev => ({ ...prev, [confId]: !prev[confId] }));
+  };
+
+  const handleCustomDeploy = (conf) => {
+    const chosenEmpId = customSelectedEmp[conf.id] || conf.suggested_employee_id || allEmployees[0]?.id;
+    const chosenEmp = allEmployees.find(e => e.id === chosenEmpId);
+
+    if (onApplyFix && chosenEmp) {
+      onApplyFix({
+        ...conf,
+        suggested_employee_id: chosenEmp.id,
+        suggested_employee_name: chosenEmp.name
+      });
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-150">
@@ -86,6 +106,7 @@ export default function ConflictDrawer({
           ) : (
             filteredConflicts.map(conf => {
               const isCritical = conf.severity === 'CRITICAL';
+              const isCustomOpen = Boolean(customAssignOpen[conf.id]);
 
               return (
                 <div 
@@ -126,16 +147,57 @@ export default function ConflictDrawer({
                     </div>
                   )}
 
-                  {/* 1-Click Action Button */}
-                  {conf.suggested_employee_id && (
-                    <button
-                      onClick={() => onApplyFix && onApplyFix(conf)}
-                      disabled={isResolving}
-                      className="w-full py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-cyan-600/30 cursor-pointer"
-                    >
-                      <Zap className="w-3.5 h-3.5" />
-                      <span>Deploy {conf.suggested_employee_name || 'Recommended Backup'} (1-Click Fix)</span>
-                    </button>
+                  {/* 1-Click Action Buttons */}
+                  {conf.brand_id && (
+                    <div className="space-y-2">
+                      {conf.suggested_employee_id && (
+                        <button
+                          onClick={() => onApplyFix && onApplyFix(conf)}
+                          disabled={isResolving}
+                          className="w-full py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-cyan-600/30 cursor-pointer"
+                        >
+                          <Zap className="w-3.5 h-3.5" />
+                          <span>Deploy {conf.suggested_employee_name || 'Recommended Backup'} (1-Click Fix)</span>
+                        </button>
+                      )}
+
+                      {/* Custom Replacement Colleague Toggle */}
+                      <button
+                        type="button"
+                        onClick={() => toggleCustomAssign(conf.id)}
+                        className="text-[11px] text-slate-400 hover:text-cyan-300 flex items-center gap-1 font-semibold mx-auto transition-colors cursor-pointer pt-1"
+                      >
+                        <UserPlus className="w-3 h-3" />
+                        <span>{isCustomOpen ? 'Hide Manual Colleague Picker' : 'Or Assign a Different Colleague Manually'}</span>
+                        <ChevronDown className={`w-3 h-3 transition-transform ${isCustomOpen ? 'rotate-180' : ''}`} />
+                      </button>
+
+                      {isCustomOpen && (
+                        <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 animate-in fade-in duration-150">
+                          <label className="block text-[10px] font-bold uppercase text-slate-400">
+                            Select Any Colleague to Cover This Shift:
+                          </label>
+                          <select
+                            value={customSelectedEmp[conf.id] || conf.suggested_employee_id || allEmployees[0]?.id}
+                            onChange={(e) => setCustomSelectedEmp(prev => ({ ...prev, [conf.id]: e.target.value }))}
+                            className="w-full bg-slate-900 border border-slate-700 text-white text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-cyan-400"
+                          >
+                            {allEmployees.map(e => (
+                              <option key={e.id} value={e.id}>
+                                {e.name} ({e.pod_id}) {e.is_pod_lead ? '★ Pod Lead' : ''}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => handleCustomDeploy(conf)}
+                            className="w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-colors cursor-pointer"
+                          >
+                            Confirm & Assign Selected Colleague
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               );
