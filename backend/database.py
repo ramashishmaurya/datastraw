@@ -1,9 +1,12 @@
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, String, Boolean, Integer, Text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-# Support Neon PostgreSQL (via Render DATABASE_URL) with local SQLite fallback
-DATABASE_URL = os.getenv("DATABASE_URL", "")
+load_dotenv()
+
+# Support Neon PostgreSQL (via Render DATABASE_URL or .env) with local SQLite fallback
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 if not DATABASE_URL:
     # Local fallback
