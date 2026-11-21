@@ -50,10 +50,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
           cache-dependency-path: ./frontend/package.json
 
@@ -77,23 +77,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: actions/setup-buildx-action@v3
-
       - name: Build Backend Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          push: false
-          tags: datastraw-backend:latest
+        run: docker build -t datastraw-backend:latest ./backend
 
       - name: Build Frontend Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: false
-          tags: datastraw-frontend:latest
-          build-args: |
-            VITE_API_BASE_URL=http://localhost:8000
+        run: docker build -t datastraw-frontend:latest ./frontend --build-arg VITE_API_BASE_URL=http://localhost:8000
