@@ -1,8 +1,8 @@
 import React from 'react';
 import { 
-  Sparkles, AlertTriangle, ShieldCheck, 
-  Download, RefreshCw, FlaskConical, Layers,
-  Calendar, CheckCircle, Users
+  Sparkles, AlertCircle, ShieldCheck, Download, 
+  RefreshCw, FlaskConical, Calendar, Users, 
+  Layers, ChevronRight, Activity
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -19,85 +19,109 @@ export default function Navbar({
   const healthPercent = metrics?.coverage_health_percent ?? 92;
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0f172a]/90 backdrop-blur-md border-b border-slate-800 px-6 py-3.5">
-      <div className="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 bg-[#090d16]/95 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3">
+      <div className="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-4">
         
-        {/* Brand and System Name */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 text-white font-black text-xl tracking-wider">
-            D
+        {/* Brand identity & System status */}
+        <div className="flex items-center gap-3.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-md shadow-cyan-500/20 text-white font-black text-base tracking-wider border border-white/10">
+            DS
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-white text-lg tracking-tight">DataStraw</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800/60">
-                OPS ROSTER v2.4
+              <span className="font-extrabold text-white text-base tracking-tight">DataStraw</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700/80 tracking-wide uppercase">
+                Smart Roster Engine
               </span>
+              <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium pl-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>Live Solver</span>
+              </div>
             </div>
-            <p className="text-xs text-slate-400 font-medium">Smart Multi-Brand Scheduling & Pod Capacity Engine</p>
+            <p className="text-[11px] text-slate-400 font-medium">Multi-Brand D2C Operations & Pod Capacity Planning</p>
           </div>
         </div>
 
-        {/* Operational Health Metrics Bar */}
-        <div className="flex items-center gap-3 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800">
+        {/* Executive KPI Stats Ribbon */}
+        <div className="hidden lg:flex items-center gap-4 bg-slate-900/90 px-4 py-1.5 rounded-xl border border-slate-800 text-xs shadow-inner">
           <div className="flex items-center gap-2 pr-3 border-r border-slate-800">
-            <Calendar className="w-4 h-4 text-slate-400" />
-            <span className="text-xs font-semibold text-slate-200">Nov 2026</span>
+            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <span className="font-semibold text-slate-200">November 2026</span>
           </div>
 
           <div className="flex items-center gap-2 pr-3 border-r border-slate-800">
-            <ShieldCheck className={`w-4 h-4 ${healthPercent > 80 ? 'text-emerald-400' : 'text-amber-400'}`} />
+            <Users className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="text-slate-300 font-medium">
+              <strong className="text-white font-bold">32</strong> Staff • <strong className="text-white font-bold">4</strong> Pods
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 pr-3 border-r border-slate-800">
+            <span className="text-slate-300 font-medium">
+              <strong className="text-white font-bold">16</strong> Brands (<span className="text-amber-400 font-bold">81%</span> Single-Res)
+            </span>
+          </div>
+
+          {/* SLA Health Indicator */}
+          <div className="flex items-center gap-2 pr-3 border-r border-slate-800">
+            <ShieldCheck className={`w-4 h-4 ${healthPercent >= 90 ? 'text-emerald-400' : 'text-amber-400'}`} />
             <div>
-              <div className="text-[10px] text-slate-400 uppercase font-semibold">SLA Health</div>
-              <div className="text-xs font-bold text-white">{healthPercent}%</div>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block leading-none">SLA Coverage</span>
+              <span className="text-xs font-black text-white tabular-nums">{healthPercent}%</span>
             </div>
           </div>
 
+          {/* Conflicts Alert Button */}
           <button 
             onClick={onOpenConflicts}
-            className={`flex items-center gap-2 px-2.5 py-1 rounded-lg transition-all ${
+            className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-all cursor-pointer ${
               criticalCount > 0 
-                ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30 hover:bg-rose-500/20 animate-pulse' 
+                ? 'bg-rose-500/15 text-rose-300 border border-rose-500/40 hover:bg-rose-500/25 shadow-sm shadow-rose-950' 
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
-            <div className="text-left">
-              <div className="text-[10px] uppercase font-semibold">Conflicts</div>
-              <div className="text-xs font-bold">{criticalCount} Critical {warningCount > 0 && `• ${warningCount} Warn`}</div>
+            <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+            <div className="text-left leading-tight">
+              <span className="text-[10px] uppercase font-bold tracking-wider block">Gaps & Rules</span>
+              <span className="text-xs font-bold tabular-nums">
+                {criticalCount} Critical {warningCount > 0 && `• ${warningCount} Warn`}
+              </span>
             </div>
           </button>
         </div>
 
         {/* Action Controls */}
         <div className="flex items-center gap-2.5">
-          {/* Simulate Change Button (Section 3F highlight) */}
+          {/* Section 3F What-If Incident Simulator */}
           <button
             onClick={onOpenSimulation}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-600/15 hover:bg-purple-600/25 border border-purple-500/40 text-purple-300 font-semibold text-xs transition-all shadow-sm shadow-purple-500/10 cursor-pointer"
-            title="Simulate sick leave or change in availability"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-900/40 to-indigo-900/40 hover:from-purple-900/60 hover:to-indigo-900/60 border border-purple-500/40 text-purple-200 font-bold text-xs transition-all shadow-sm shadow-purple-950 cursor-pointer"
+            title="Simulate sick leave or unplanned unavailability post-roster generation"
           >
-            <FlaskConical className="w-4 h-4 text-purple-400" />
-            <span>Simulate Change</span>
+            <FlaskConical className="w-3.5 h-3.5 text-purple-400" />
+            <span>Simulate Incident</span>
+            <span className="px-1.5 py-0.2 rounded bg-purple-950 text-purple-300 border border-purple-700/60 text-[9px] font-black">
+              SEC 3F
+            </span>
           </button>
 
-          {/* Regenerate Button */}
+          {/* Regenerate Solver */}
           <button
             onClick={onRegenerate}
             disabled={isGenerating}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs transition-all cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs transition-all cursor-pointer disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 text-slate-400 ${isGenerating ? 'animate-spin' : ''}`} />
-            <span>Regenerate</span>
+            <RefreshCw className={`w-3.5 h-3.5 text-slate-400 ${isGenerating ? 'animate-spin' : ''}`} />
+            <span>Re-solve</span>
           </button>
 
-          {/* Export CSV Button */}
+          {/* Export CSV */}
           <button
             onClick={onExportCSV}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs transition-all shadow-md shadow-cyan-600/20 cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-xs transition-all cursor-pointer"
           >
-            <Download className="w-4 h-4" />
-            <span>Export CSV</span>
+            <Download className="w-3.5 h-3.5 text-slate-400" />
+            <span>Export</span>
           </button>
         </div>
 
