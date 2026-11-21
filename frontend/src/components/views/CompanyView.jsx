@@ -266,15 +266,17 @@ export default function CompanyView({
                   <React.Fragment key={podId}>
                     {/* Pod Category Header Banner */}
                     <tr className="bg-slate-900/90 border-y border-slate-700/80">
-                      <td colSpan={days.length + 1} className="sticky left-0 px-4 py-2 font-black text-xs text-cyan-300 tracking-wide uppercase flex items-center gap-2">
-                        <Users className="w-3.5 h-3.5 text-cyan-400" />
-                        <span>{pod.name}</span>
-                        <span className="text-slate-400 font-semibold text-[10px] lowercase">
-                          • lead: <strong className="text-slate-200 capitalize">{pod.lead_name}</strong>
-                        </span>
-                        <span className="text-slate-500 font-normal text-[10px] ml-auto pr-4">
-                          {podEmps.length} Associates
-                        </span>
+                      <td colSpan={days.length + 1} className="px-4 py-2 font-black text-xs text-cyan-300 tracking-wide uppercase">
+                        <div className="sticky left-4 inline-flex items-center gap-2">
+                          <Users className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>{pod.name}</span>
+                          <span className="text-slate-400 font-semibold text-[10px] lowercase">
+                            • lead: <strong className="text-slate-200 capitalize">{pod.lead_name}</strong>
+                          </span>
+                          <span className="text-slate-500 font-normal text-[10px] ml-4">
+                            ({podEmps.length} Associates)
+                          </span>
+                        </div>
                       </td>
                     </tr>
 

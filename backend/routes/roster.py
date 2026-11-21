@@ -183,14 +183,24 @@ def apply_recommended_fix(req: ApplyFixRequest):
         cell_id = f"{req.date}_{req.backup_employee_id}"
         db_cell = db.query(RosterCellModel).filter(RosterCellModel.id == cell_id).first()
 
-        if db_cell:
-            db_cell.status = ShiftStatus.WORKING.value
-            db_cell.brand_id = brand.id
-            db_cell.brand_name = brand.name
-            db_cell.process_type = req.process_type.value
-            db_cell.is_backup = True
-            db_cell.notes = f"Backup deployed: Covering {brand.name} [{req.process_type.value}]"
-            db.commit()
+        if not db_cell:
+            emp_map = {e.id: e for e in current_employees}
+            emp = emp_map.get(req.backup_employee_id)
+            db_cell = RosterCellModel(
+                id=cell_id,
+                date=req.date,
+                employee_id=req.backup_employee_id,
+                employee_name=emp.name if emp else None,
+            )
+            db.add(db_cell)
+
+        db_cell.status = ShiftStatus.WORKING.value
+        db_cell.brand_id = brand.id
+        db_cell.brand_name = brand.name
+        db_cell.process_type = req.process_type.value
+        db_cell.is_backup = True
+        db_cell.notes = f"Backup deployed: Covering {brand.name} [{req.process_type.value}]"
+        db.commit()
     finally:
         db.close()
 

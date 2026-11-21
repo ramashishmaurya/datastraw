@@ -241,7 +241,7 @@ export default function BrandView({
           </div>
         </div>
 
-        <div className="grid grid-cols-5 md:grid-cols-10 lg:grid-cols-15 gap-2">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {dailyCoverage.map(day => {
             const isCovered = day.activeCount > 0 && !day.hasCriticalGap;
             const isGap = day.hasCriticalGap;
@@ -251,7 +251,7 @@ export default function BrandView({
                 key={day.dateStr}
                 className={`p-2 rounded-xl border text-center transition-all ${
                   isGap 
-                    ? 'bg-rose-950/40 border-rose-500/80 text-rose-300 shadow-md shadow-rose-950/50' 
+                    ? 'bg-rose-950/40 border-rose-500/80 text-rose-300 shadow-md shadow-rose-950/50 ring-1 ring-rose-500/50' 
                     : isCovered
                       ? 'bg-emerald-950/20 border-emerald-500/40 text-emerald-300'
                       : 'bg-slate-950 border-slate-800 text-slate-500'
@@ -267,8 +267,8 @@ export default function BrandView({
                     <Clock className="w-4 h-4 text-slate-600" />
                   )}
                 </div>
-                <div className="text-[9px] font-bold">
-                  {isGap ? '0 Staff Gap' : isCovered ? `${day.activeCount} Active` : 'Closed'}
+                <div className="text-[9px] font-bold truncate">
+                  {isGap ? '0 Staff' : isCovered ? `${day.activeCount} Active` : 'Closed'}
                 </div>
               </div>
             );

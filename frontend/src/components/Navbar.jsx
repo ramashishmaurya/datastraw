@@ -107,11 +107,25 @@ export default function Navbar({
         {/* Action Controls */}
         <div className="flex items-center gap-2.5">
           
+          {/* Mobile-Only Conflicts Badge Button */}
+          <button 
+            onClick={onOpenConflicts}
+            className={`lg:hidden flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              criticalCount > 0 
+                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50' 
+                : 'bg-slate-900 border border-slate-700 text-slate-300'
+            }`}
+            title="Open Conflict Audit Drawer"
+          >
+            <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+            <span className="tabular-nums font-mono">{criticalCount}</span>
+          </button>
+
           {/* Background Theme Selector Dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-semibold text-xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-semibold text-xs transition-all cursor-pointer shadow-sm"
               title="Change Background Style / Theme"
             >
               <Palette className="w-3.5 h-3.5 text-cyan-400" />
@@ -119,37 +133,46 @@ export default function Navbar({
             </button>
 
             {isThemeMenuOpen && (
-              <div className="absolute right-0 mt-2 w-60 bg-[#0c1222] border border-slate-700 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 border-b border-slate-800 mb-1">
-                  Select Background Style
-                </div>
-                {BACKGROUND_THEMES.map(theme => {
-                  const isSelected = theme.id === bgTheme;
-                  return (
-                    <button
-                      key={theme.id}
-                      onClick={() => {
-                        onSelectBgTheme && onSelectBgTheme(theme.id);
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
-                        isSelected 
-                          ? 'bg-cyan-600/20 text-cyan-300 font-bold border border-cyan-500/40' 
-                          : 'text-slate-300 hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span>{theme.icon}</span>
-                        <div>
-                          <div className="text-xs">{theme.name}</div>
-                          <div className="text-[10px] text-slate-400">{theme.desc}</div>
+              <>
+                {/* Transparent Click-Outside Backdrop */}
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setIsThemeMenuOpen(false)} 
+                />
+                
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-[#0c1222] border border-slate-700 rounded-2xl shadow-2xl p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150 origin-top-right">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 border-b border-slate-800 mb-1">
+                    Select Background Style
+                  </div>
+                  {BACKGROUND_THEMES.map(theme => {
+                    const isSelected = theme.id === bgTheme;
+                    return (
+                      <button
+                        key={theme.id}
+                        onClick={() => {
+                          onSelectBgTheme && onSelectBgTheme(theme.id);
+                          setIsThemeMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
+                          isSelected 
+                            ? 'bg-cyan-600/20 text-cyan-300 font-bold border border-cyan-500/40' 
+                            : 'text-slate-300 hover:bg-slate-800/60'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{theme.icon}</span>
+                          <div>
+                            <div className="text-xs font-bold">{theme.name}</div>
+                            <div className="text-[10px] text-slate-400">{theme.desc}</div>
+                          </div>
                         </div>
-                      </div>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-cyan-400" />}
-                    </button>
-                  );
-                })}
-              </div>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
             )}
           </div>
 

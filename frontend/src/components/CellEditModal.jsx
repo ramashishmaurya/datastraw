@@ -5,6 +5,7 @@ export default function CellEditModal({
   cell, 
   employee, 
   brands, 
+  allocations = [],
   allEmployees = [],
   isOpen, 
   onClose, 
@@ -13,9 +14,14 @@ export default function CellEditModal({
 }) {
   if (!isOpen || !cell) return null;
 
+  // Find employee's assigned brand(s)
+  const empAllocs = allocations.filter(a => a.employee_id === employee?.id);
+  const primaryBrandId = cell.brand_id || empAllocs[0]?.brand_id || brands[0]?.id || '';
+  const primaryBrand = brands.find(b => b.id === primaryBrandId) || brands[0];
+
   const [status, setStatus] = useState(cell.status || 'WORKING');
-  const [brandId, setBrandId] = useState(cell.brand_id || brands[0]?.id || '');
-  const [processType, setProcessType] = useState(cell.process_type || 'CS');
+  const [brandId, setBrandId] = useState(primaryBrandId);
+  const [processType, setProcessType] = useState(cell.process_type || empAllocs[0]?.process_type || 'CS');
   const [isBackup, setIsBackup] = useState(cell.is_backup || false);
   const [notes, setNotes] = useState(cell.notes || '');
 
@@ -23,8 +29,9 @@ export default function CellEditModal({
   // Filter pod peers who are not this employee
   const podPeers = allEmployees.filter(e => e.pod_id === employee?.pod_id && e.id !== employee?.id);
   const otherPeers = allEmployees.filter(e => e.pod_id !== employee?.pod_id && e.id !== employee?.id);
+  const [coverBrandId, setCoverBrandId] = useState(primaryBrandId);
   const [replacementEmpId, setReplacementEmpId] = useState(podPeers[0]?.id || otherPeers[0]?.id || '');
-  const [replacementProcess, setReplacementProcess] = useState(cell.process_type || 'CS');
+  const [replacementProcess, setReplacementProcess] = useState(cell.process_type || empAllocs[0]?.process_type || 'CS');
 
   const isAbsence = ['PLANNED_LEAVE', 'SICK_LEAVE', 'WEEKLY_OFF'].includes(status);
 
@@ -48,7 +55,7 @@ export default function CellEditModal({
       return;
     }
 
-    const selectedBrand = brands.find(b => b.id === brandId) || brands[0];
+    const selectedBrand = brands.find(b => b.id === coverBrandId) || primaryBrand;
     const repEmp = allEmployees.find(e => e.id === replacementEmpId);
 
     if (onAssignReplacement) {
@@ -65,7 +72,10 @@ export default function CellEditModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 animate-in fade-in duration-150"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
       <div className="w-full max-w-lg bg-[#0b101d] border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         
         {/* Header */}
@@ -199,7 +209,24 @@ export default function CellEditModal({
               </p>
 
               <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      Brand to Cover
+                    </label>
+                    <select
+                      value={coverBrandId}
+                      onChange={(e) => setCoverBrandId(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 text-white text-xs font-bold rounded-xl px-2.5 py-2 focus:outline-none focus:border-cyan-400 cursor-pointer"
+                    >
+                      {brands.map(b => (
+                        <option key={b.id} value={b.id}>
+                          {b.name.split(' (')[0]} {b.id === primaryBrandId ? '★ (Primary)' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <div>
                     <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
                       Choose Replacement Colleague
@@ -207,12 +234,12 @@ export default function CellEditModal({
                     <select
                       value={replacementEmpId}
                       onChange={(e) => setReplacementEmpId(e.target.value)}
-                      className="w-full bg-slate-950 border border-cyan-500/40 text-white text-xs font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-cyan-400 cursor-pointer"
+                      className="w-full bg-slate-950 border border-cyan-500/40 text-white text-xs font-bold rounded-xl px-2.5 py-2 focus:outline-none focus:border-cyan-400 cursor-pointer"
                     >
                       <optgroup label="Same Pod Peers (Recommended)">
                         {podPeers.map(p => (
                           <option key={p.id} value={p.id}>
-                            {p.name} {p.is_pod_lead ? '★ Pod Lead' : ''} ({p.skills.join('/')})
+                            {p.name} {p.is_pod_lead ? '★ Lead' : ''} ({p.skills.join('/')})
                           </option>
                         ))}
                       </optgroup>
@@ -233,7 +260,7 @@ export default function CellEditModal({
                     <select
                       value={replacementProcess}
                       onChange={(e) => setReplacementProcess(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 text-white text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none focus:border-cyan-400 cursor-pointer"
+                      className="w-full bg-slate-950 border border-slate-800 text-white text-xs font-semibold rounded-xl px-2.5 py-2 focus:outline-none focus:border-cyan-400 cursor-pointer"
                     >
                       <option value="CS">Customer Support (CS)</option>
                       <option value="ACC">Abandoned Cart (ACC)</option>

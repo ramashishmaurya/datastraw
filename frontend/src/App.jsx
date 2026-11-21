@@ -348,6 +348,7 @@ export default function App() {
           cell={cellToEdit.cell}
           employee={cellToEdit.employee}
           brands={masterData.brands}
+          allocations={masterData.allocations}
           allEmployees={masterData.employees}
           isOpen={Boolean(cellToEdit)}
           onClose={() => setCellToEdit(null)}
