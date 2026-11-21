@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Sparkles, AlertCircle, ShieldCheck, Download, 
   RefreshCw, FlaskConical, Calendar, Users, 
-  Layers, ChevronRight, Activity, Palette, Check
+  Layers, ChevronRight, Activity, Sun, Moon
 } from 'lucide-react';
-
-const BACKGROUND_THEMES = [
-  { id: 'obsidian', name: 'Obsidian Solid', icon: '🌌', desc: 'Minimalist deep obsidian dark' },
-  { id: 'aurora', name: 'Aurora Glow', icon: '✨', desc: 'Ambient purple & cyan light mesh' },
-  { id: 'grid', name: 'Dot Matrix', icon: '📐', desc: 'Subtle technical developer dots' },
-  { id: 'blueprint', name: 'Blueprint Grid', icon: '🛰️', desc: 'High-tech operations grid pattern' },
-  { id: 'midnight', name: 'Midnight Deep', icon: '🌙', desc: 'Rich indigo & deep navy gradient' },
-];
 
 export default function Navbar({ 
   metrics, 
@@ -21,16 +13,12 @@ export default function Navbar({
   onExportCSV,
   isGenerating,
   totalConflicts,
-  bgTheme = 'aurora',
-  onSelectBgTheme
+  theme = 'dark',
+  onToggleTheme
 }) {
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
-
   const criticalCount = metrics?.critical_conflicts || 0;
   const warningCount = metrics?.warning_conflicts || 0;
   const healthPercent = metrics?.coverage_health_percent ?? 92;
-
-  const currentTheme = BACKGROUND_THEMES.find(t => t.id === bgTheme) || BACKGROUND_THEMES[1];
 
   return (
     <header className="sticky top-0 z-40 bg-[#090d16]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3">
@@ -121,60 +109,24 @@ export default function Navbar({
             <span className="tabular-nums font-mono">{criticalCount}</span>
           </button>
 
-          {/* Background Theme Selector Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-semibold text-xs transition-all cursor-pointer shadow-sm"
-              title="Change Background Style / Theme"
-            >
-              <Palette className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{currentTheme.icon} Background</span>
-            </button>
-
-            {isThemeMenuOpen && (
+          {/* Light / Dark Mode Toggle Button */}
+          <button
+            onClick={onToggleTheme}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-semibold text-xs transition-all cursor-pointer shadow-sm"
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {theme === 'dark' ? (
               <>
-                {/* Transparent Click-Outside Backdrop */}
-                <div 
-                  className="fixed inset-0 z-40" 
-                  onClick={() => setIsThemeMenuOpen(false)} 
-                />
-                
-                {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-[#0c1222] border border-slate-700 rounded-2xl shadow-2xl p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150 origin-top-right">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 border-b border-slate-800 mb-1">
-                    Select Background Style
-                  </div>
-                  {BACKGROUND_THEMES.map(theme => {
-                    const isSelected = theme.id === bgTheme;
-                    return (
-                      <button
-                        key={theme.id}
-                        onClick={() => {
-                          onSelectBgTheme && onSelectBgTheme(theme.id);
-                          setIsThemeMenuOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
-                          isSelected 
-                            ? 'bg-cyan-600/20 text-cyan-300 font-bold border border-cyan-500/40' 
-                            : 'text-slate-300 hover:bg-slate-800/60'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-base">{theme.icon}</span>
-                          <div>
-                            <div className="text-xs font-bold">{theme.name}</div>
-                            <div className="text-[10px] text-slate-400">{theme.desc}</div>
-                          </div>
-                        </div>
-                        {isSelected && <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0" />}
-                      </button>
-                    );
-                  })}
-                </div>
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <span>Light</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Dark</span>
               </>
             )}
-          </div>
+          </button>
 
           {/* Section 3F What-If Incident Simulator */}
           <button

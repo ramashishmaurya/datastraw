@@ -24,11 +24,12 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isResolving, setIsResolving] = useState(false);
-  const [bgTheme, setBgTheme] = useState(() => localStorage.getItem('datastraw_theme') || 'aurora');
+  const [theme, setTheme] = useState(() => localStorage.getItem('datastraw_theme_mode') || 'dark');
 
-  const handleSelectBgTheme = (theme) => {
-    setBgTheme(theme);
-    localStorage.setItem('datastraw_theme', theme);
+  const handleToggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('datastraw_theme_mode', next);
   };
 
   // Data states
@@ -184,7 +185,7 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen bg-theme-${bgTheme} text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-white transition-colors duration-300`}>
+    <div className={`min-h-screen ${theme === 'light' ? 'theme-light' : 'theme-dark bg-[#080c14]'} text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-white transition-colors duration-200`}>
       
       {/* Top Navigation Bar */}
       <Navbar
@@ -195,8 +196,8 @@ export default function App() {
         onExportCSV={handleExportCSV}
         isGenerating={isGenerating}
         totalConflicts={rosterData.conflicts.length}
-        bgTheme={bgTheme}
-        onSelectBgTheme={handleSelectBgTheme}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Container */}
