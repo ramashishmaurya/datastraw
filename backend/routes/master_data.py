@@ -48,3 +48,4 @@ def add_allocation(alloc: Allocation):
     ]
     current_allocations.append(alloc)
     return alloc
+
