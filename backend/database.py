@@ -106,5 +106,41 @@ def init_db():
                 db.add(db_cell)
             db.commit()
             print(f"Successfully seeded {len(initial_roster.cells)} shifts into the database!")
+
+        # Check and seed allocations
+        alloc_count = db.query(AllocationModel).count()
+        if alloc_count == 0:
+            print("Seeding allocations into database...")
+            from data.seed_data import ALLOCATIONS
+            for idx, a in enumerate(ALLOCATIONS):
+                p_type = a.process_type.value if hasattr(a.process_type, 'value') else str(a.process_type)
+                db_alloc = AllocationModel(
+                    id=f"alloc-{idx+1}",
+                    employee_id=a.employee_id,
+                    brand_id=a.brand_id,
+                    process_type=p_type,
+                    is_primary=a.is_primary
+                )
+                db.add(db_alloc)
+            db.commit()
+            print(f"Successfully seeded {len(ALLOCATIONS)} allocations into database!")
+
+        # Check and seed leave_records
+        leave_count = db.query(LeaveRecordModel).count()
+        if leave_count == 0:
+            print("Seeding leave records into database...")
+            from data.seed_data import PRECONFIGURED_LEAVES
+            for l in PRECONFIGURED_LEAVES:
+                l_type = l.leave_type.value if hasattr(l.leave_type, 'value') else str(l.leave_type)
+                db_leave = LeaveRecordModel(
+                    id=l.id,
+                    employee_id=l.employee_id,
+                    date=l.date,
+                    leave_type=l_type,
+                    reason=l.reason
+                )
+                db.add(db_leave)
+            db.commit()
+            print(f"Successfully seeded {len(PRECONFIGURED_LEAVES)} leave records into database!")
     finally:
         db.close()

@@ -13,7 +13,7 @@ from routes.master_data import (
     current_employees, current_brands, current_allocations,
     current_holidays, current_leaves
 )
-from database import SessionLocal, RosterCellModel, init_db
+from database import SessionLocal, RosterCellModel, LeaveRecordModel, init_db
 
 router = APIRouter(prefix="/api/roster", tags=["Roster Engine"])
 
@@ -157,6 +157,30 @@ def update_roster_cell(req: ShiftUpdateRequest):
         db_cell.process_type = req.process_type.value if req.process_type else None
         db_cell.is_backup = req.is_backup
         db_cell.notes = req.notes or f"Manual edit by Ops Manager ({req.status.value})"
+
+        # Synchronize with leave_records table
+        leave_statuses = ["PLANNED_LEAVE", "SICK_LEAVE", "COMP_OFF"]
+        existing_leave = db.query(LeaveRecordModel).filter(
+            LeaveRecordModel.employee_id == req.employee_id,
+            LeaveRecordModel.date == req.date
+        ).first()
+
+        if req.status.value in leave_statuses:
+            if existing_leave:
+                existing_leave.leave_type = req.status.value
+                existing_leave.reason = req.notes or f"Leave applied via Frontend ({req.status.value})"
+            else:
+                new_leave = LeaveRecordModel(
+                    id=f"leave_{req.employee_id}_{req.date}",
+                    employee_id=req.employee_id,
+                    date=req.date,
+                    leave_type=req.status.value,
+                    reason=req.notes or f"Leave applied via Frontend ({req.status.value})"
+                )
+                db.add(new_leave)
+        else:
+            if existing_leave:
+                db.delete(existing_leave)
 
         db.commit()
     finally:
