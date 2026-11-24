@@ -80,11 +80,11 @@ export default function BrandView({
       
       {/* Brand Category Filter Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-2.5 rounded-2xl border border-slate-800">
-        <div className="flex items-center gap-1.5 text-xs font-semibold">
-          <span className="text-slate-400 text-[11px] uppercase mr-1">Filter Portfolio:</span>
+        <div className="flex items-center gap-1.5 text-xs font-semibold overflow-x-auto no-scrollbar touch-scroll w-full sm:w-auto pb-1 sm:pb-0">
+          <span className="text-slate-400 text-[11px] uppercase mr-1 shrink-0">Filter Portfolio:</span>
           <button
             onClick={() => setFilterType('ALL')}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer shrink-0 ${
               filterType === 'ALL' ? 'bg-cyan-600 text-white font-bold' : 'bg-slate-950 text-slate-400 hover:text-white'
             }`}
           >
@@ -92,7 +92,7 @@ export default function BrandView({
           </button>
           <button
             onClick={() => setFilterType('SINGLE')}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer shrink-0 ${
               filterType === 'SINGLE' ? 'bg-amber-600 text-white font-bold' : 'bg-slate-950 text-amber-400 hover:text-white'
             }`}
           >
@@ -100,7 +100,7 @@ export default function BrandView({
           </button>
           <button
             onClick={() => setFilterType('MULTI')}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer shrink-0 ${
               filterType === 'MULTI' ? 'bg-indigo-600 text-white font-bold' : 'bg-slate-950 text-indigo-400 hover:text-white'
             }`}
           >
@@ -108,7 +108,7 @@ export default function BrandView({
           </button>
           <button
             onClick={() => setFilterType('GAPS')}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer shrink-0 ${
               filterType === 'GAPS' ? 'bg-rose-600 text-white font-bold' : 'bg-slate-950 text-rose-400 hover:text-white'
             }`}
           >

@@ -201,75 +201,80 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-[1700px] w-full mx-auto px-6 py-5 space-y-5">
+      <main className="flex-1 max-w-[1700px] w-full mx-auto px-2.5 sm:px-4 md:px-6 py-3 sm:py-5 space-y-4 sm:space-y-5">
         
         {/* Navigation Tabs (5 Core Views from Section 3E) */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
-          <div className="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs font-bold">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-4 border-b border-slate-800 pb-3">
+          <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-900/90 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl border border-slate-800 text-xs font-bold overflow-x-auto no-scrollbar touch-scroll w-full sm:w-auto">
             <button
               onClick={() => setActiveTab('COMPANY')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all cursor-pointer shrink-0 text-xs ${
                 activeTab === 'COMPANY' 
                   ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30' 
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Grid className="w-4 h-4" />
-              <span>Company Master Roster (32)</span>
+              <Grid className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden md:inline">Company Master Roster (32)</span>
+              <span className="md:hidden">Company (32)</span>
             </button>
 
             <button
               onClick={() => setActiveTab('POD')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all cursor-pointer shrink-0 text-xs ${
                 activeTab === 'POD' 
                   ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30' 
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Users className="w-4 h-4" />
-              <span>Pod Teams (4)</span>
+              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden md:inline">Pod Teams (4)</span>
+              <span className="md:hidden">Pods (4)</span>
             </button>
 
             <button
               onClick={() => setActiveTab('BRAND')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all cursor-pointer shrink-0 text-xs ${
                 activeTab === 'BRAND' 
                   ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30' 
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Briefcase className="w-4 h-4" />
-              <span>Brand SLA Coverage (16)</span>
+              <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden md:inline">Brand SLA Coverage (16)</span>
+              <span className="md:hidden">Brands (16)</span>
             </button>
 
             <button
               onClick={() => setActiveTab('PROCESS')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all cursor-pointer shrink-0 text-xs ${
                 activeTab === 'PROCESS' 
                   ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30' 
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Layers className="w-4 h-4" />
-              <span>Process Staffing (CS/ACC/NDR)</span>
+              <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden md:inline">Process Staffing (CS/ACC/NDR)</span>
+              <span className="md:hidden">Process</span>
             </button>
 
             <button
               onClick={() => setActiveTab('EMPLOYEE')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all cursor-pointer shrink-0 text-xs ${
                 activeTab === 'EMPLOYEE' 
                   ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30' 
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <User className="w-4 h-4" />
-              <span>Employee Schedule</span>
+              <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden md:inline">Employee Schedule</span>
+              <span className="md:hidden">Staff</span>
             </button>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 font-medium shrink-0">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span>Constraint Engine Active • {rosterData.cells.length} Shifts Monitored</span>
+            <span>Constraint Engine Active • {rosterData.cells.length} Shifts</span>
           </div>
         </div>
 

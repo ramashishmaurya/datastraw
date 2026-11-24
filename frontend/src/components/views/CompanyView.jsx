@@ -146,27 +146,27 @@ export default function CompanyView({
     <div className="space-y-4">
       
       {/* Ops Control Strip */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/70 p-3 rounded-2xl border border-slate-800 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-slate-900/70 p-2.5 sm:p-3 rounded-2xl border border-slate-800 shadow-sm">
         
         {/* Left: Search & Pod Filter */}
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
+          <div className="relative w-full sm:w-60 md:w-72">
             <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
             <input
               type="text"
-              placeholder="Search 32 specialists by name, role, email..."
+              placeholder="Search specialists, roles, pods..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 w-72"
+              className="bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 w-full"
             />
           </div>
 
           {/* Pod Pill Selector */}
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80 text-xs font-semibold">
+          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80 text-xs font-semibold overflow-x-auto no-scrollbar touch-scroll w-full sm:w-auto shrink-0">
             <button
               onClick={() => setSelectedPod('ALL')}
-              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-                selectedPod === 'ALL' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+              className={`px-2.5 sm:px-3 py-1 rounded-lg transition-all cursor-pointer shrink-0 text-xs ${
+                selectedPod === 'ALL' ? 'bg-cyan-600 text-white shadow-sm font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               All Pods ({employees.length})
@@ -175,8 +175,8 @@ export default function CompanyView({
               <button
                 key={pod.id}
                 onClick={() => setSelectedPod(pod.id)}
-                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                  selectedPod === pod.id ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                className={`px-2 sm:px-2.5 py-1 rounded-lg transition-all cursor-pointer shrink-0 text-xs ${
+                  selectedPod === pod.id ? 'bg-cyan-600 text-white shadow-sm font-bold' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {pod.name.split(' - ')[0]}
@@ -186,7 +186,7 @@ export default function CompanyView({
         </div>
 
         {/* Right: Group By Toggle & Legend */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between lg:justify-end gap-3 w-full lg:w-auto">
           <button
             onClick={() => setGroupByPod(!groupByPod)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
@@ -221,13 +221,13 @@ export default function CompanyView({
       </div>
 
       {/* Main Roster Matrix Grid */}
-      <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#090e1a] shadow-2xl max-h-[660px]">
-        <table className="w-full text-left border-collapse min-w-[1550px]">
+      <div className="overflow-x-auto touch-scroll rounded-2xl border border-slate-800 bg-[#090e1a] shadow-2xl max-h-[75vh] md:max-h-[660px]">
+        <table className="w-full text-left border-collapse min-w-[1400px]">
           
           {/* Calendar Header */}
           <thead className="sticky top-0 z-30 bg-[#0c1222] border-b border-slate-800 shadow-md">
             <tr>
-              <th className="sticky left-0 z-40 bg-[#0c1222] px-4 py-3 text-xs font-bold text-slate-200 uppercase tracking-wider w-64 border-r border-slate-800">
+              <th className="sticky left-0 z-40 bg-[#0c1222] px-3 sm:px-4 py-3 text-xs font-bold text-slate-200 uppercase tracking-wider w-44 sm:w-56 md:w-64 border-r border-slate-800">
                 Specialist & Pod Lead
               </th>
               {days.map(d => {

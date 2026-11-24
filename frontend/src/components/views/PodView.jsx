@@ -20,7 +20,7 @@ export default function PodView({ pods, employees, brands, cells, onCellClick })
   return (
     <div className="space-y-6">
       {/* Pod Selection Header Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {pods.map(pod => {
           const isSelected = pod.id === activePodId;
           const memberCount = employees.filter(e => e.pod_id === pod.id).length;
@@ -86,7 +86,7 @@ export default function PodView({ pods, employees, brands, cells, onCellClick })
             <Briefcase className="w-3.5 h-3.5 text-cyan-400" />
             Brands Assigned to this Pod ({podBrands.length})
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             {podBrands.map(b => (
               <div key={b.id} className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
                 <div className="flex items-center justify-between text-xs mb-1">

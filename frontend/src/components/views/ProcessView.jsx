@@ -50,7 +50,7 @@ export default function ProcessView({ cells, employees, brands }) {
   return (
     <div className="space-y-6">
       {/* Process Selection Tabs */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {Object.entries(PROCESS_METADATA).map(([procKey, pMeta]) => {
           const isSelected = procKey === selectedProcess;
           const PIcon = pMeta.icon;
