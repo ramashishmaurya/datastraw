@@ -1,7 +1,9 @@
 // API helper for DataStraw Smart Roster Engine
 const API_BASE = import.meta.env.VITE_API_BASE_URL 
   ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')}/api` 
-  : '/api';
+  : (import.meta.env.PROD 
+      ? 'https://datastraw-rcd0.onrender.com/api' 
+      : '/api');
 
 export async function fetchMasterData() {
   const [podsRes, empsRes, brandsRes, allocsRes, holRes, leavesRes] = await Promise.all([
